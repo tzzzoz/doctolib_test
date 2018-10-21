@@ -49,6 +49,7 @@ class Event < ApplicationRecord
     end
   end
 
+  # Availabilities for a specific date, in the format of binary mask
   def self.availabilities_for(current_date, events)
     # fetch all opening events that impact on current_date
     # including the events with weekly_recurring &
@@ -82,10 +83,20 @@ class Event < ApplicationRecord
     appointment_events&.each do |event|
       appointment_mask = appointment_mask | event.send(:mask_for_time_slots)
     end
-    # the bitwise XOR operator will erase the '1' from opening_mask with the '1' of appointment_mask
-    # and keep the '1' in opening_mask with the '0' of appointment_mask
+    # Firstly, the bitwise AND between opening_mask and appointment_mask will eliminate the invalid bits from appointment_mask,
+    # the invalid bits stands for the time slots which are not covered by opening_mask.
+    # Ex. appointment_mask: 0b1111110000000000000000000000000, bit_length: 31
+    #         opening_mask:   0b11111100000000000000000000000, bit_length: 29
+    # The appointment_mask is larger than opening_mask,
+    # which means the two leftmost bits of appointment_mask are definitly invalid.
+    # With the bitwise AND operator, we can eliminate this kind of invalid bits.
+    # appointment_mask & opening_mask
+    # will let us get the valid appointment_mask 0b11110000000000000000000000000, bit_length: 29
+    # Then by using the bitwise XOR operator between the valid appointment_mask and opening_mask.
+    # the bitwise XOR operator will erase the '1' from opening_mask with the '1' of valid appointment_mask
+    # and keep the '1' in opening_mask with the '0' of valid appointment_mask
+    # In the example above, we get 0b1100000000000000000000000, bit_length: 29
     opening_mask & appointment_mask ^ opening_mask
-    # opening_mask ^ appointment_mask
   end
 
   private_class_method :availabilities_for, :time_slots_from_mask

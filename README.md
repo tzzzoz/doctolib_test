@@ -1,24 +1,11 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Time expense:
+* Reading and understanding the problem and requirements: _20 minutes_
+* Simulation on draft paper by hands and get pseudo-code: _30 minutes_
+* Setup Rails 5.1 and Preparation of tests: _30 minutes_
+* Algorithm mplementation: _1 hour 30 minutes_
+* Benchmark: 10 minutes
+* Completing tests: _40 minutes_
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Total: _3 hours 40 minutes_

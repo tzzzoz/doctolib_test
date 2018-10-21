@@ -222,4 +222,22 @@ class EventTest < ActiveSupport::TestCase
     puts benchmark_result
     assert_operator benchmark_result.real, :<, 30
   end
+
+  # 6. Tests for support helper methods
+  # 6.1 Tests for Event private instance method :mask_for_time_slots
+  test "mask_for_time_slots returns the correct binary_mask for an event" do
+    # @opening_event starts_at: "2014-08-04 09:30", ends_at "2014-08-04 12:30"
+    binary_mask = @opening_event.send(:mask_for_time_slots)
+
+    assert_equal 24 * 2 - (9 * 2 + 1), binary_mask.bit_length
+    assert_equal 0b11111100000000000000000000000, binary_mask
+  end
+
+  # 6.2 Tests for Event private class method :time_slots_from_mask
+  test "time_slots_from_mask converts correctly the binary_mask to time slots" do
+    binary_mask = 0b11001100000000000000000000000
+    time_slots = Event.send(:time_slots_from_mask, binary_mask)
+
+    assert_equal ["9:30", "10:00", "11:30", "12:00"], time_slots
+  end
 end

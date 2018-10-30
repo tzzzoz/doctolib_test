@@ -15,7 +15,7 @@ class Event < ApplicationRecord
       # To fetch the events for each day,
       # it should convert the date of day to the days_to_week
       start_days = start_date.days_to_week_start
-      (0..AVAILABILITY_WINDOW / 1.day - 1).each do |day_index|
+      (0...AVAILABILITY_WINDOW / 1.day).each do |day_index|
         current_date = start_date + day_index
         current_days_to_week = (start_days + day_index) % 7
         events = concerned_events[current_days_to_week]
